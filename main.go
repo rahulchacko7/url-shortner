@@ -59,12 +59,28 @@ func (u *URLShortener) shorten(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"short_url": shortenedURL})
 }
 
+func (u *URLShortener) redirect(c *gin.Context) {
+	shortURL := c.Param("short_url")
+
+	u.mu.RLock()
+	originalURL, exists := u.store[shortURL]
+	u.mu.RUnlock()
+
+	if !exists {
+		c.JSON(http.StatusNotFound, gin.H{"error": "URL not found"})
+		return
+	}
+
+	c.Redirect(http.StatusMovedPermanently, originalURL)
+}
+
 func main() {
 	r := gin.Default()
 
 	urlShortener := NewURLShortener()
 
 	r.POST("/shorten", urlShortener.shorten)
+	r.GET("/:short_url", urlShortener.redirect)
 
 	r.Run(":8080")
 }
