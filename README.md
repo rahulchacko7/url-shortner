@@ -21,7 +21,7 @@ A simple URL shortener service built with the Gin framework in Go. This applicat
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/url-shortener.git
+   git clone https://github.com/rahulchacko7/url-shortener.git
    cd url-shortener
    ```
 
